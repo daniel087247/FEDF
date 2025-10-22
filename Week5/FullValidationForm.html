@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validated HTML Form with JS Feedback</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #6e6666;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    form {
+        background: rgb(229, 225, 225);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        width: 320px;
+    }
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        transition: border-color 0.3s, background-color 0.3s;
+    }
+    .error {
+        color: red;
+        font-size: 12px;
+        height: 14px;
+    }
+    .success {
+        color: green;
+        font-weight: bold;
+        margin-top: 15px;
+        display: none;
+    }
+    .valid {
+        border-color: green;
+        background-color: #eaffea;
+    }
+    .invalid {
+        border-color: red;
+        background-color: #ffeaea;
+    }
+    button {
+        margin-top: 15px;
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+
+<form id="myForm" novalidate>
+    <label for="fullname">Full Name:</label>
+    <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+    <div class="error" id="fullnameError"></div>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <div class="error" id="emailError"></div>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    <div class="error" id="passwordError"></div>
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+    <div class="error" id="phoneError"></div>
+
+    <button type="submit">Submit</button>
+    <div class="success" id="successMessage">Form submitted successfully!</div>
+</form>
+
+<script>
+    const fields = {
+        fullname: {
+            element: document.getElementById('fullname'),
+            error: document.getElementById('fullnameError'),
+            validate: value => /^[A-Za-z\s]+$/.test(value.trim()) && value.trim() !== "",
+            errorMessage: "Full name must contain only letters and spaces."
+        },
+        email: {
+            element: document.getElementById('email'),
+            error: document.getElementById('emailError'),
+            validate: value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()),
+            errorMessage: "Invalid email format."
+        },
+        password: {
+            element: document.getElementById('password'),
+            error: document.getElementById('passwordError'),
+            validate: value => {
+                return value.length >= 6 &&
+                       /[A-Z]/.test(value) &&
+                       /[a-z]/.test(value) &&
+                       /[0-9]/.test(value) &&
+                       /[@$!%*?&]/.test(value);
+            },
+            errorMessage: "Password must have upper, lower, number & special char."
+        },
+        phone: {
+            element: document.getElementById('phone'),
+            error: document.getElementById('phoneError'),
+            validate: value => /^[0-9]{10}$/.test(value.trim()),
+            errorMessage: "Phone number must be exactly 10 digits."
+        }
+    };
+
+    // Add real-time validation feedback
+    Object.values(fields).forEach(field => {
+        field.element.addEventListener('input', () => {
+            if (field.validate(field.element.value)) {
+                field.error.textContent = "";
+                field.element.classList.add('valid');
+                field.element.classList.remove('invalid');
+            } else {
+                field.error.textContent = field.errorMessage;
+                field.element.classList.add('invalid');
+                field.element.classList.remove('valid');
+            }
+        });
+    });
+
+    // Handle form submission
+    document.getElementById('myForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let allValid = true;
+
+        Object.values(fields).forEach(field => {
+            if (!field.validate(field.element.value)) {
+                field.error.textContent = field.errorMessage;
+                field.element.classList.add('invalid');
+                field.element.classList.remove('valid');
+                allValid = false;
+            }
+        });
+
+        const successMessage = document.getElementById('successMessage');
+        if (allValid) {
+            successMessage.style.display = 'block';
+            this.reset();
+            Object.values(fields).forEach(field => {
+                field.element.classList.remove('valid', 'invalid');
+            });
+        } else {
+            successMessage.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
