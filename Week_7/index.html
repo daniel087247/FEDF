@@ -1,0 +1,69 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="UTF-8"> 
+<title>Online Bookstore</title> 
+<style> 
+body { 
+font-family: Arial, sans-serif; 
+background: #f4f4f4; 
+margin: 0; 
+padding: 20px; 
+} 
+.book-list, .cart { 
+max-width: 600px; 
+margin: auto; 
+background: white; 
+padding: 20px; 
+border-radius: 12px; 
+box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+margin-bottom: 20px; 
+} 
+.book { 
+display: flex; 
+justify-content: space-between; 
+padding: 10px 0; 
+border-bottom: 1px solid #ddd; 
+} 
+.book:last-child { 
+border-bottom: none; 
+} 
+button { 
+background: #007BFF; 
+color: white; 
+border: none; 
+border-radius: 6px; 
+padding: 6px 10px; 
+cursor: pointer; 
+} 
+button:hover { 
+background: #0056b3; 
+} 
+.cart-item { 
+display: flex; 
+justify-content: space-between; 
+margin: 5px 0; 
+} 
+.cart-total { 
+font-weight: bold; 
+margin-top: 10px; 
+} 
+</style> 
+</head> 
+<body> 
+<h1 style="text-align:center;">📚 Online Bookstore</h1> 
+<div class="book-list" id="bookList"></div> 
+<div class="cart"> 
+<h2>🛒 Shopping Cart</h2> 
+<div id="cartItems"></div> 
+<div class="cart-total" id="cartTotal">Total: ₹0</div> 
+</div> 
+<script type="module"> 
+import { displayBooks } from './books.js'; 
+import { updateCartUI } from './ui.js'; 
+import { cart } from './cart.js'; 
+displayBooks(); 
+updateCartUI(cart); 
+</script> 
+</body> 
+</html>
